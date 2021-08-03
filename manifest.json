@@ -1,0 +1,17 @@
+{
+  "name": "inurl",
+  "description": "display pictures on index of page",
+  "author": "jan h croonen",
+  "version": "0.1",
+  "permissions": [
+    "tabs"
+  ],
+  "page_action": {
+    "default_title": "inurl"
+  },
+  "content_scripts": [{
+    "matches": ["https://*/*/*", "http://*/*/*"],
+    "js": ["content.js"]
+    }],
+  "manifest_version": 2
+}
