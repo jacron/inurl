@@ -12,6 +12,9 @@
 (function() {
     'use strict';
 
+    let isw = '200px';  // '100px';
+    let iswL = '600px';  // '300px';
+
     function hasGraphExtension(s) {
         const p = s.lastIndexOf('.'),
             exts = ['jpg','png', 'gif', 'jpeg', 'bmp'];
@@ -44,8 +47,6 @@
 
     function getAnchor(href, nr, caption) {
         const img = document.createElement('img');
-        let isw = '100px';
-        let iswL = '300px';
         let naturalDims;
         img.style.width = isw;
         img.style.height = 'auto';
@@ -161,8 +162,8 @@
         }
     }
 
-    console.log(document.title);
-    console.log(document.location);
+    // console.log(document.title);
+    // console.log(document.location);
     if (document.title.indexOf('Index of ') === 0) {
         loadImages();
     }
