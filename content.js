@@ -17,6 +17,15 @@ const websiteStyle = [
         background-color: #242424;
         color: #b2b2b2;
     }
+    h2 {
+        color: #b2b2b2 !important;    
+    }
+    dmt-quote {
+        opacity: .7;
+    }
+    .banner, #paywall-form {
+        display: none !important;
+    }
 </style>
 `],
 ];
@@ -37,13 +46,13 @@ function hasGraphExtension(s) {
 }
 
 function bodyAppendBrs(body, n) {
-    for (let i = 0; i < n; i+=1) {
+    for (let i = 0; i < n; i += 1) {
         body.appendChild(document.createElement('br'));
     }
 }
 
 function getSrc(href) {
-    if (href.indexOf('http') !== 0) {
+    if (!href.startsWith('http')) {
         console.log('link without http');
         const fullHref = document.location.host + href;
         console.log(fullHref);
@@ -90,8 +99,6 @@ function getAnchor(href, nr, caption) {
             targetWidth = w === '' ? '900px' : isw;
         }
         e.target.style.width = targetWidth;
-        // e.target.style.width = (w === isw || w === iswL) ? '' :
-        //     w === '' ? '900px' : isw;
     };
     return anchor;
 }
@@ -182,12 +189,31 @@ function loadImages() {
     }
 }
 
+function styleIframe() {
+    const style =         `<style data-provided-by-inurl>
+    .singlePodcast {
+        opacity: .3;
+    }
+</style>
+`;
+    if (document.location.href.startsWith('https://www.nrc.nl/')) {
+        console.log(frames)
+        const iframe = frames[0];
+        console.log(iframe);
+        if (iframe) {
+            iframe.document.head.innerHTML += style;
+        }
+    }
+
+}
+
 function injectStyles() {
     for (let [url, style] of websiteStyle) {
         if (document.location.href.startsWith(url)) {
             document.head.innerHTML += style;
         }
     }
+    styleIframe();
 }
 
 (function() {
