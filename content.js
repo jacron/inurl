@@ -20,8 +20,8 @@ const websiteStyle = [
     h2 {
         color: #b2b2b2 !important;    
     }
-    dmt-quote {
-        opacity: .7;
+    dmt-quote, img {
+        opacity: .7 !important;
     }
     .banner, #paywall-form {
         display: none !important;
