@@ -10,7 +10,7 @@
     "default_title": "inurl"
   },
   "content_scripts": [{
-    "matches": ["https://*/*/*", "http://*/*/*"],
+    "matches": ["https://*/*", "http://*/*"],
     "js": ["content.js"]
     }],
   "manifest_version": 2

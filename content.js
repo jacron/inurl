@@ -1,17 +1,57 @@
+console.log('*** content script inurl started')
+
 let isw = '200px';  // '100px';
 let iswL = '600px';  // '300px';
+let darkBackground = '#242424';
+let darkColor = '#b2b2b2';
 
-const websiteStyle = [
-    // hide: Blijf op de hoogte
-    ['https://www.trouw.nl/',
+const DpgMedia = [
+    'https://www.trouw.nl/', 'https://www.volkskrant.nl/'
+];
+
+const homeWebsiteStyle = [
+    // set dark mode
+    [
+        ['https://www.trouw.nl/', 'https://www.volkskrant.nl/'],
+        `<style data-provided-by-inurl>
+body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrapper,
+ .section__anchor, .section__header, .section-title, .section-title > span, a.app-navigation__link,
+  .read-more__text {
+    background-color: #242424;
+    color: #b2b2b2 !important;
+}
+</style>`
+    ],
+    [
+        ['https://www.volkskrant.nl/'],
+        `<style data-provided-by-inurl>
+.wl-tile, .teaser__title span {
+    background-color: #242424;
+    color: #b2b2b2 !important;
+}
+</style>`
+
+    ],
+]
+const globalStyles = {
+    stackoverflow:
+        `<style data-provided-by-inurl>
+    #sidebar {
+        display: none;
+    }
+    #mainbar {
+        width: 100%;    
+    }
+</style>
+`,
+    trouw:
         `<style data-provided-by-inurl>
     #main-content div[data-temptation-position] {
         display: none;
     }
 </style>
-`],
-    // maak background minder zwart dan #111
-    ['https://www.nrc.nl/',
+`,
+    nrc:
         `<style data-provided-by-inurl>
     body {
         background-color: #242424;
@@ -27,9 +67,29 @@ const websiteStyle = [
         display: none !important;
     }
 </style>
-`],
+`,
+    fontawesome:
+        `<style data-provided-by-inurl>
+    article:has(span.sr-only) {
+        display: none !important;
+    }
+</style>
+`
+} 
+const globalWebsiteStyle = [
+    // hide sidebar
+    ['https://stackoverflow.com/', globalStyles.stackoverflow
+    ],
+    // hide: Blijf op de hoogte
+    ['https://www.trouw.nl/', globalStyles.trouw
+],
+    // maak background minder zwart dan #111
+    ['https://www.nrc.nl/', globalStyles.nrc
+],
+    // hide pro (paid) icons
+    ['https://fontawesome.com/', globalStyles.fontawesome
+]
 ];
-
 
 function hasGraphExtension(s) {
     const p = s.lastIndexOf('.'),
@@ -69,8 +129,6 @@ function getAnchor(href, nr, caption) {
     img.style.margin = '2px';
     img.src = getSrc(href);
     const anchor = document.createElement('a');
-    // anchor.href = href;
-    // anchor.target = '_blank';
     const tile = document.createElement('div');
     tile.appendChild(img);
     tile.appendChild(document.createElement('br'));
@@ -82,7 +140,6 @@ function getAnchor(href, nr, caption) {
     anchor.appendChild(tile);
     img.onload = function() {
         naturalDims = this.naturalWidth + 'x' + this.naturalHeight;
-        // this.title = naturalDims;
         this.title = caption
         text.textContent = nr
         dimSpan.textContent = ' ' + naturalDims;
@@ -127,8 +184,6 @@ function getAnchors() {
         anchors = [];
     let parentDirectoryLink = '';
     let linksLength = links.length;
-    //debug
-    // linksLength = 3;
     for (let i = 0; i < linksLength; i+=1) {
         const link = links[i];
         let href = link.href;
@@ -207,13 +262,28 @@ function styleIframe() {
 
 }
 
-function injectStyles() {
-    for (let [url, style] of websiteStyle) {
+function injectGlobalStyles() {
+    for (let [url, style] of globalWebsiteStyle) {
+        console.log(url, document.location.href)
         if (document.location.href.startsWith(url)) {
+            console.log('inject global style into: ' + url);
             document.head.innerHTML += style;
         }
     }
+}
+
+function  injectDarkMode() {
+    for (let [urls, style] of homeWebsiteStyle) {
+        if (urls.indexOf(document.location.href) !== -1) {
+            document.head.innerHTML += style;
+        }
+    }
+}
+
+function injectStyles() {
+    injectGlobalStyles();
     styleIframe();
+    injectDarkMode();
 }
 
 (function() {
