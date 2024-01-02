@@ -25,7 +25,7 @@ body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrappe
     [
         ['https://www.volkskrant.nl/'],
         `<style data-provided-by-inurl>
-.wl-tile, .teaser__title span {
+.wl-tile, .teaser__title span, .teaser__link, .app-brand, svg {
     background-color: #242424;
     color: #b2b2b2 !important;
 }
@@ -34,6 +34,13 @@ body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrappe
     ],
 ]
 const globalStyles = {
+    youtube:
+    `<style data-provided-by-inurl>
+    div#secondary { 
+        display: none !important; 
+    }
+</style>
+`,
     stackoverflow:
         `<style data-provided-by-inurl>
     #sidebar {
@@ -41,6 +48,9 @@ const globalStyles = {
     }
     #mainbar {
         width: 100%;    
+    }
+    pre.s-code-block {
+        line-height: 1.8;
     }
 </style>
 `,
@@ -71,24 +81,23 @@ const globalStyles = {
     fontawesome:
         `<style data-provided-by-inurl>
     article:has(span.sr-only) {
-        display: none !important;
+        /*display: none !important;*/
     }
 </style>
 `
 } 
 const globalWebsiteStyle = [
     // hide sidebar
-    ['https://stackoverflow.com/', globalStyles.stackoverflow
-    ],
+    ['https://stackoverflow.com/', globalStyles.stackoverflow],
+
     // hide: Blijf op de hoogte
-    ['https://www.trouw.nl/', globalStyles.trouw
-],
+    ['https://www.trouw.nl/', globalStyles.trouw],
+
     // maak background minder zwart dan #111
-    ['https://www.nrc.nl/', globalStyles.nrc
-],
+    ['https://www.nrc.nl/', globalStyles.nrc],
+
     // hide pro (paid) icons
-    ['https://fontawesome.com/', globalStyles.fontawesome
-]
+    ['https://fontawesome.com/', globalStyles.fontawesome]
 ];
 
 function hasGraphExtension(s) {
@@ -264,7 +273,6 @@ function styleIframe() {
 
 function injectGlobalStyles() {
     for (let [url, style] of globalWebsiteStyle) {
-        console.log(url, document.location.href)
         if (document.location.href.startsWith(url)) {
             console.log('inject global style into: ' + url);
             document.head.innerHTML += style;
@@ -280,6 +288,52 @@ function  injectDarkMode() {
     }
 }
 
+function createButton(caption, top, handler) {
+    const button = document.createElement('button');
+    button.style.position = 'fixed';
+    button.style.top = top + 'px';
+    button.style.right = '10px';
+    button.textContent = caption;
+    button.onclick = handler;
+    return button;
+}
+
+function injectFontAwesomeControl() {
+    const button = createButton('hide pro icons', 10, () => {
+        const icons = document.querySelectorAll('article:has(span.sr-only)');
+        for (let icon of icons) {
+            icon.style.display = 'none';
+        }
+    })
+    document.body.appendChild(button);
+}
+
+function injectYoutubeControl() {
+    const button = createButton('hide secondary column', 60, () => {
+        const secondary = document.querySelector('div#secondary');
+        if (secondary.style.display === 'none'){
+            secondary.style.display = 'block';
+            button.textContent = 'hide sec. column';
+        } else {
+            secondary.style.display = 'none';
+            button.textContent = 'show sec. column';
+        }
+    })
+    document.body.appendChild(button);
+}
+
+function injectControl() {
+    if (document.location.href.startsWith("https://fontawesome.com")) {
+        injectFontAwesomeControl();
+    }
+    if (document.location.href.startsWith("https://www.youtube.com")) {
+        injectYoutubeControl();
+        // setTimeout(() => {
+        //     injectYoutubeControl();
+        // }, 3500)
+    }
+}
+
 function injectStyles() {
     injectGlobalStyles();
     styleIframe();
@@ -289,4 +343,5 @@ function injectStyles() {
 (function() {
     loadImages();
     injectStyles();
+    injectControl();
 })();
