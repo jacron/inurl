@@ -308,17 +308,22 @@ function injectFontAwesomeControl() {
     document.body.appendChild(button);
 }
 
+function hideSecondary(button) {
+    const secondary = document.querySelector('div#secondary');
+    if (secondary.style.display === 'none'){
+        secondary.style.display = 'block';
+        button.textContent = 'hide sec. column';
+    } else {
+        secondary.style.display = 'none';
+        button.textContent = 'show sec. column';
+    }
+}
+
 function injectYoutubeControl() {
-    const button = createButton('hide secondary column', 60, () => {
-        const secondary = document.querySelector('div#secondary');
-        if (secondary.style.display === 'none'){
-            secondary.style.display = 'block';
-            button.textContent = 'hide sec. column';
-        } else {
-            secondary.style.display = 'none';
-            button.textContent = 'show sec. column';
-        }
-    })
+    const button = createButton('hide secondary column', 60, () => hideSecondary(button));
+    setTimeout(() => {
+        hideSecondary(button);
+    }, 3600)
     document.body.appendChild(button);
 }
 
