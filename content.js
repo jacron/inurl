@@ -293,6 +293,7 @@ function createButton(caption, top, handler) {
     button.style.position = 'fixed';
     button.style.top = top + 'px';
     button.style.right = '10px';
+    button.style.opacity = '.6';
     button.textContent = caption;
     button.onclick = handler;
     return button;
