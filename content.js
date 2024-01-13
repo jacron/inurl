@@ -84,8 +84,15 @@ const globalStyles = {
         /*display: none !important;*/
     }
 </style>
-`
-} 
+`,
+    ft:
+        `<style data-provided-by-inurl>
+    .o-banner {
+        display: none !important;
+    }
+</style>
+`,
+}
 const globalWebsiteStyle = [
     // hide sidebar
     ['https://stackoverflow.com/', globalStyles.stackoverflow],
@@ -97,7 +104,9 @@ const globalWebsiteStyle = [
     ['https://www.nrc.nl/', globalStyles.nrc],
 
     // hide pro (paid) icons
-    ['https://fontawesome.com/', globalStyles.fontawesome]
+    ['https://fontawesome.com/', globalStyles.fontawesome],
+
+    ['https://www.ft.com', globalStyles.ft]
 ];
 
 function hasGraphExtension(s) {
@@ -340,10 +349,19 @@ function injectControl() {
     }
 }
 
+function reinjectFT() {
+    if (document.location.href.startsWith("https://www.ft.com")) {
+        setTimeout(() => {
+            document.head.innerHTML += globalStyles.ft;
+        }, 1000)
+    }
+}
+
 function injectStyles() {
     injectGlobalStyles();
     styleIframe();
     injectDarkMode();
+    reinjectFT();
 }
 
 (function() {
