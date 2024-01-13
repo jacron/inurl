@@ -2,17 +2,22 @@ console.log('*** content script inurl started')
 
 let isw = '200px';  // '100px';
 let iswL = '600px';  // '300px';
-let darkBackground = '#242424';
-let darkColor = '#b2b2b2';
 
-const DpgMedia = [
-    'https://www.trouw.nl/', 'https://www.volkskrant.nl/'
-];
+const web = {
+    VOLKSKRANT: 'https://www.volkskrant.nl/',
+    TROUW: 'https://www.trouw.nl/',
+    STACKOVERFLOW: 'https://stackoverflow.com/',
+    NRC: 'https://www.nrc.nl/',
+    FA: 'https://fontawesome.com/',
+    FT: 'https://www.ft.com',
+    GUARDIAN: 'https://www.theguardian.com',
+    YOUTUBE: "https://www.youtube.com",
+}
 
 const homeWebsiteStyle = [
     // set dark mode
     [
-        ['https://www.trouw.nl/', 'https://www.volkskrant.nl/'],
+        [web.TROUW, web.VOLKSKRANT],
         `<style data-provided-by-inurl>
 body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrapper,
  .section__anchor, .section__header, .section-title, .section-title > span, a.app-navigation__link,
@@ -23,7 +28,7 @@ body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrappe
 </style>`
     ],
     [
-        ['https://www.volkskrant.nl/'],
+        [web.VOLKSKRANT],
         `<style data-provided-by-inurl>
 .wl-tile, .teaser__title span, .teaser__link, .app-brand, svg {
     background-color: #242424;
@@ -92,21 +97,29 @@ const globalStyles = {
     }
 </style>
 `,
+    guardian:
+        `<style data-provided-by-inurl>
+    aside {
+        display: none !important;
+    }
+</style>
+`,
 }
 const globalWebsiteStyle = [
     // hide sidebar
-    ['https://stackoverflow.com/', globalStyles.stackoverflow],
+    [web.STACKOVERFLOW, globalStyles.stackoverflow],
 
     // hide: Blijf op de hoogte
-    ['https://www.trouw.nl/', globalStyles.trouw],
+    [web.TROUW, globalStyles.trouw],
 
     // maak background minder zwart dan #111
-    ['https://www.nrc.nl/', globalStyles.nrc],
+    [web.NRC, globalStyles.nrc],
 
     // hide pro (paid) icons
-    ['https://fontawesome.com/', globalStyles.fontawesome],
+    [web.FA, globalStyles.fontawesome],
 
-    ['https://www.ft.com', globalStyles.ft]
+    [web.FT, globalStyles.ft],
+    [web.GUARDIAN, globalStyles.guardian]
 ];
 
 function hasGraphExtension(s) {
@@ -269,7 +282,7 @@ function styleIframe() {
     }
 </style>
 `;
-    if (document.location.href.startsWith('https://www.nrc.nl/')) {
+    if (document.location.href.startsWith(web.NRC)) {
         console.log(frames)
         const iframe = frames[0];
         console.log(iframe);
@@ -338,22 +351,27 @@ function injectYoutubeControl() {
 }
 
 function injectControl() {
-    if (document.location.href.startsWith("https://fontawesome.com")) {
+    if (document.location.href.startsWith(web.FA)) {
         injectFontAwesomeControl();
     }
-    if (document.location.href.startsWith("https://www.youtube.com")) {
-        injectYoutubeControl();
-        // setTimeout(() => {
-        //     injectYoutubeControl();
-        // }, 3500)
+    if (document.location.href.startsWith(web.YOUTUBE)) {
+        // injectYoutubeControl();
     }
 }
 
 function reinjectFT() {
-    if (document.location.href.startsWith("https://www.ft.com")) {
+    if (document.location.href.startsWith(web.FT)) {
         setTimeout(() => {
             document.head.innerHTML += globalStyles.ft;
         }, 1000)
+    }
+}
+
+function reinjectGuardian() {
+    if (document.location.href.startsWith(web.GUARDIAN)) {
+        setTimeout(() => {
+            document.head.innerHTML += globalStyles.guardian;
+        }, 1600)
     }
 }
 
@@ -362,6 +380,7 @@ function injectStyles() {
     styleIframe();
     injectDarkMode();
     reinjectFT();
+    reinjectGuardian();
 }
 
 (function() {
