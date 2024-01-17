@@ -12,6 +12,7 @@ const web = {
     FT: 'https://www.ft.com',
     GUARDIAN: 'https://www.theguardian.com',
     YOUTUBE: "https://www.youtube.com",
+    MTORRENT: "https://utweb.rainberrytv.com/gui/index.html",
 }
 
 const homeWebsiteStyle = [
@@ -92,6 +93,19 @@ const globalStyles = {
 `,
     ft:
         `<style data-provided-by-inurl>
+/*    body {
+        background-color: #242424 !important;
+        color: #b2b2b2 !important;
+    }
+    .slice__content, .o-header {
+        background-color: #555;
+        color: #b2b2b2;    
+    }
+    .headline {
+        color: #b2b2b2 !important;    
+        background-color: #555;
+    
+    }*/
     .o-banner {
         display: none !important;
     }
@@ -316,6 +330,7 @@ function createButton(caption, top, handler) {
     button.style.top = top + 'px';
     button.style.right = '10px';
     button.style.opacity = '.6';
+    button.style.zIndex = '999';
     button.textContent = caption;
     button.onclick = handler;
     return button;
@@ -350,6 +365,24 @@ function injectYoutubeControl() {
     document.body.appendChild(button);
 }
 
+function toggleElement(element) {
+    if (element.style.display === 'none'){
+        element.style.display = 'block';
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+function injectMtorrent() {
+    if (document.location.href.startsWith(web.MTORRENT)) {
+        const button = createButton('sidebar', 60, () => {
+            const sidebar = document.getElementById('sidebar');
+            toggleElement(sidebar);
+        });
+        document.body.appendChild(button);
+    }
+}
+
 function injectControl() {
     if (document.location.href.startsWith(web.FA)) {
         injectFontAwesomeControl();
@@ -357,6 +390,7 @@ function injectControl() {
     if (document.location.href.startsWith(web.YOUTUBE)) {
         // injectYoutubeControl();
     }
+    injectMtorrent();
 }
 
 function reinjectFT() {
