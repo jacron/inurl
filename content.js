@@ -329,7 +329,7 @@ function createButton(caption, top, handler) {
     button.style.position = 'fixed';
     button.style.top = top + 'px';
     button.style.right = '10px';
-    button.style.opacity = '.6';
+    // button.style.opacity = '.6';
     button.style.zIndex = '999';
     button.textContent = caption;
     button.onclick = handler;
@@ -380,6 +380,10 @@ function injectMtorrent() {
             toggleElement(sidebar);
         });
         document.body.appendChild(button);
+        const sidebar = document.getElementById('sidebar');
+        setTimeout(() => {
+            toggleElement(sidebar);
+        }, 1000);
     }
 }
 
