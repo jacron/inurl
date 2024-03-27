@@ -13,32 +13,33 @@ const web = {
     GUARDIAN: 'https://www.theguardian.com',
     YOUTUBE: "https://www.youtube.com",
     MTORRENT: "https://utweb.rainberrytv.com/gui/index.html",
+    NEWYORKER: "https://www.newyorker.com"
 }
 
-const homeWebsiteStyle = [
-    // set dark mode
-    [
-        [web.TROUW, web.VOLKSKRANT],
-        `<style data-provided-by-inurl>
-body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrapper,
- .section__anchor, .section__header, .section-title, .section-title > span, a.app-navigation__link,
-  .read-more__text {
-    background-color: #242424;
-    color: #b2b2b2 !important;
-}
-</style>`
-    ],
-    [
-        [web.VOLKSKRANT],
-        `<style data-provided-by-inurl>
-.wl-tile, .teaser__title span, .teaser__link, .app-brand, svg {
-    background-color: #242424;
-    color: #b2b2b2 !important;
-}
-</style>`
-
-    ],
-]
+// const homeWebsiteStyle = [
+//     // set dark mode
+//     [
+//         [web.TROUW, web.VOLKSKRANT],
+//         `<style data-provided-by-inurl>
+// body, .app-header-home, .app-navigation, #main-content, .section, .oortje-wrapper,
+//  .section__anchor, .section__header, .section-title, .section-title > span, a.app-navigation__link,
+//   .read-more__text {
+//     background-color: #242424;
+//     color: #b2b2b2 !important;
+// }
+// </style>`
+//     ],
+//     [
+//         [web.VOLKSKRANT],
+//         `<style data-provided-by-inurl>
+// .wl-tile, .teaser__title span, .teaser__link, .app-brand, svg {
+//     background-color: #242424;
+//     color: #b2b2b2 !important;
+// }
+// </style>`
+//
+//     ],
+// ]
 const globalStyles = {
     youtube:
     `<style data-provided-by-inurl>
@@ -316,13 +317,13 @@ function injectGlobalStyles() {
     }
 }
 
-function  injectDarkMode() {
-    for (let [urls, style] of homeWebsiteStyle) {
-        if (urls.indexOf(document.location.href) !== -1) {
-            document.head.innerHTML += style;
-        }
-    }
-}
+// function  injectDarkMode() {
+//     for (let [urls, style] of homeWebsiteStyle) {
+//         if (urls.indexOf(document.location.href) !== -1) {
+//             document.head.innerHTML += style;
+//         }
+//     }
+// }
 
 function createButton(caption, top, handler) {
     const button = document.createElement('button');
@@ -346,24 +347,24 @@ function injectFontAwesomeControl() {
     document.body.appendChild(button);
 }
 
-function hideSecondary(button) {
-    const secondary = document.querySelector('div#secondary');
-    if (secondary.style.display === 'none'){
-        secondary.style.display = 'block';
-        button.textContent = 'hide sec. column';
-    } else {
-        secondary.style.display = 'none';
-        button.textContent = 'show sec. column';
-    }
-}
+// function hideSecondary(button) {
+//     const secondary = document.querySelector('div#secondary');
+//     if (secondary.style.display === 'none'){
+//         secondary.style.display = 'block';
+//         button.textContent = 'hide sec. column';
+//     } else {
+//         secondary.style.display = 'none';
+//         button.textContent = 'show sec. column';
+//     }
+// }
 
-function injectYoutubeControl() {
-    const button = createButton('hide secondary column', 60, () => hideSecondary(button));
-    setTimeout(() => {
-        hideSecondary(button);
-    }, 3600)
-    document.body.appendChild(button);
-}
+// function injectYoutubeControl() {
+//     const button = createButton('hide secondary column', 60, () => hideSecondary(button));
+//     setTimeout(() => {
+//         hideSecondary(button);
+//     }, 3600)
+//     document.body.appendChild(button);
+// }
 
 function toggleElement(element) {
     if (element.style.display === 'none'){
@@ -413,12 +414,30 @@ function reinjectGuardian() {
     }
 }
 
+function reinjectNewYorker() {
+    if (document.location.href.startsWith(web.NEWYORKER)) {
+        /*
+        setInterval(() => {
+            const divs = document.querySelectorAll('div');
+            for (let div of divs) {
+                const bgColor = div.style.backgroundColor;
+                console.log(bgColor)
+                if (bgColor.toString() === 'rgba(10, 10, 10, 0.8') {
+                    console.log('blocker found')
+                    div.style.display = 'none';
+                }
+            }
+        }, 5000)*/
+    }
+}
+
 function injectStyles() {
     injectGlobalStyles();
     styleIframe();
-    injectDarkMode();
-    reinjectFT();
-    reinjectGuardian();
+    // injectDarkMode();
+    // reinjectFT();
+    // reinjectGuardian();
+    // reinjectNewYorker();
 }
 
 (function() {
