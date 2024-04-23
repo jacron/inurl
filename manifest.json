@@ -1,13 +1,14 @@
 {
-  "name": "inurl",
+  "name": "images factory (aka inurl)",
   "description": "display pictures on index of page",
   "author": "jan h croonen",
-  "version": "0.3",
+  "version": "0.4",
   "permissions": [
     "tabs"
   ],
   "action": {
-    "default_title": "inurl"
+    "default_title": "imagefactory",
+    "default_popup": "popup.html"
   },
   "content_scripts": [{
     "matches": ["https://*/*", "http://*/*"],
